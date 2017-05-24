@@ -1,0 +1,3 @@
+grant codeBase "file:/home/ivana/Ivana/Develop/NBU/AskServerConfigurator/bin/-" {
+    permission java.security.AllPermission;
+};
