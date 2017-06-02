@@ -99,7 +99,7 @@ public class ConfiguratorUI {
 						.getCodeSource().getLocation().toString());
 
 		System.setProperty("java.security.policy",
-				"/home/ivana/Ivana/Develop/NBU/AskServerConfigurator/Resources/rmi.policy");
+				System.getProperty("user.dir")+ "/Resources/rmi.policy");
 
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());

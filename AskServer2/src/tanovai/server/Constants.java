@@ -5,6 +5,7 @@ public interface Constants {
 	String EMAIL_HOST = "smtp.gmail.com";
 	String EMAIL_ACCOUNT = "dfdsf@gmail.com";
 	String EMAIL_PASSWORD = "pass";
+	
 
 	String ASK_REQUEST = "ASK_REQUEST";
 	String ASK_REQUEST_END = "</ASK_REQUEST>";

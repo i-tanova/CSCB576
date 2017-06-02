@@ -56,7 +56,7 @@ public class AskServerMain implements IServerAdminRMI {
 						.getCodeSource().getLocation().toString());
 
 		System.setProperty("java.security.policy",
-				"/home/ivana/Ivana/Develop/NBU/AskServer2/Resources/server.policy");
+				System.getProperty("user.dir")+ "/Resources/server.policy");
 
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
@@ -115,22 +115,14 @@ public class AskServerMain implements IServerAdminRMI {
 
 	@Override
 	public void startServer(int port) throws RemoteException {
-		if(server.isPaused()){
+		if(server != null && server.isPaused()){
 			server.startAfterPaused();
 			return;
 		}
 		
 		server = new AskServer(themesList, port);
-
+		
 		new Thread(server).start();
-
-		try {
-			Thread.sleep(10 * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Stopping Server");
-		server.stop();
 	}
 
 	@Override
@@ -143,6 +135,7 @@ public class AskServerMain implements IServerAdminRMI {
 
 	@Override
 	public void stopServer() throws RemoteException {
+		System.out.println("Stopping Server..");
 		if (server != null) {
 			server.stop();
 		}
@@ -150,6 +143,7 @@ public class AskServerMain implements IServerAdminRMI {
 
 	@Override
 	public void pauseServer() throws RemoteException {
+		System.out.println("Pause Server");
 		if (server != null) {
 			server.pause();
 		}
