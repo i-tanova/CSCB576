@@ -1,3 +1,4 @@
 grant codeBase "file:/home/fallenstar/Develop/NBU/CSCB576/AskServer2/bin/*" {
     permission java.security.AllPermission;
+    permission java.lang.RuntimePermission "setFactory";
 };

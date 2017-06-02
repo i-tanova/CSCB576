@@ -3,8 +3,9 @@ package tanovai.server;
 public interface Constants {
 
 	String EMAIL_HOST = "smtp.gmail.com";
-	String EMAIL_ACCOUNT = "dfdsf@gmail.com";
-	String EMAIL_PASSWORD = "pass";
+	String EMAIL_ACCOUNT = "tanovait@gmail.com";
+	String EMAIL_FROM = "tanovait";
+	String EMAIL_PASSWORD = "uarlcal#";
 	
 
 	String ASK_REQUEST = "ASK_REQUEST";
