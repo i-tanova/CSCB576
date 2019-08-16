@@ -3,9 +3,9 @@ package tanovai.server;
 public interface Constants {
 
 	String EMAIL_HOST = "smtp.gmail.com";
-	String EMAIL_ACCOUNT = "tanovait@gmail.com";
-	String EMAIL_FROM = "tanovait";
-	String EMAIL_PASSWORD = "uarlcal#";
+	String EMAIL_ACCOUNT = "testcscb576@gmail.com";
+	String EMAIL_FROM = "testcscb576";
+	String EMAIL_PASSWORD = "testcscb57612";
 	
 
 	String ASK_REQUEST = "ASK_REQUEST";
@@ -32,7 +32,6 @@ public interface Constants {
 	String configDir = "Resources";
 	String configFile = "config.txt";
 	int rmiPort = 12347;
-	int EMAILS_COUNT = 2;
 
 	int SERV_REQ_OK = 101;
 	int SERV_REQ_DENY = 201;

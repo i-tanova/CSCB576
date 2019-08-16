@@ -1,4 +1,5 @@
 package tanovai.server;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -15,25 +16,27 @@ public class EmailSender {
 	static MimeMessage generateMailMessage;
  
  public static void sendEmails(List<String> toEmailsList, String senderEmail, String senderMessage) throws CoreException, AddressException, MessagingException{
-
-	// Step1
+	       // Step1
 			System.out.println("\n 1st ===> setup Mail Server Properties..");
 			mailServerProperties = System.getProperties();
 			mailServerProperties.put("mail.smtp.port", "587");
 			mailServerProperties.put("mail.smtp.auth", "true");
 			mailServerProperties.put("mail.smtp.starttls.enable", "true");
+			
 			System.out.println("Mail Server Properties have been setup successfully..");
 	 
 			// Step2
 			System.out.println("\n\n 2nd ===> get Mail Session..");
 			getMailSession = Session.getDefaultInstance(mailServerProperties, new MyAuthenticator());
+			getMailSession.setDebug(true);
 			generateMailMessage = new MimeMessage(getMailSession);
 			String[] to = toEmailsList.toArray(new String[]{}); 
 			
 			for(String toString : to){
 				generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(toString));
 			}
-		    generateMailMessage.setFrom(Constants.EMAIL_ACCOUNT);
+		    
+			generateMailMessage.setFrom(new InternetAddress(Constants.EMAIL_ACCOUNT));
 			generateMailMessage.setSubject("Ask server request");
 			generateMailMessage.setContent(senderMessage, "text/html");
 			System.out.println("Mail Session has been created successfully..");
@@ -47,74 +50,59 @@ public class EmailSender {
 			transport.connect(Constants.EMAIL_HOST, Constants.EMAIL_ACCOUNT, Constants.EMAIL_PASSWORD);
 			transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 			transport.close();
-	 //	    String host = "smtp.gmail.com";
-//	    String from = "tanovait";
-//	    String pass = "ooksip89";
-//	    
-//	    Properties props = System.getProperties();
-//	    props.put("mail.smtp.starttls.enable", "true"); // added this line
-//	    props.put("mail.smtp.host", host);
-//	    props.put("mail.smtp.user", from);
-//	    props.put("mail.smtp.password", pass);
-//	    props.put("mail.smtp.port", "587");
-//	    props.put("mail.smtp.auth", "true");
-//
-//	    String[] to = toEmailsList.toArray(new String[]{}); 
-//
-//	    Session session = Session.getDefaultInstance(props, null);
-//	    MimeMessage message = new MimeMessage(session);
-//	    try {
-//			message.setFrom(new InternetAddress(senderEmail));
-//		} catch (AddressException e) {
-//			throw new CoreException("Invalid sender email");
-//		} catch (MessagingException e) {
-//			throw new CoreException("Invalid sender message email");
-//		}
-//
-//	    InternetAddress[] toAddress = new InternetAddress[Constants.EMAILS_COUNT];
-//
-//	    // To get the array of addresses
-//	    for( int i=0; i < to.length && i< Constants.EMAILS_COUNT; i++ ) { // changed from a while loop
-//	        try {
-//				toAddress[i] = new InternetAddress(to[i]);
-//			} catch (AddressException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	    }
-//	    System.out.println(Message.RecipientType.TO);
-//
-//	    for( int i=0; i < toAddress.length; i++) { // changed from a while loop
-//	        try {
-//	        	System.out.println(toAddress[i]);
-//				message.addRecipient(Message.RecipientType.TO, toAddress[i]);
-//			} catch (MessagingException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	    }
-//	    
-//	    try {
-//			message.setSubject("Ask server request");
-//	
-//	    message.setText(senderMessage,"UTF-8");
-//	    Transport transport = session.getTransport("smtps");
-//	    transport.connect(host, from, pass);
-//	    transport.sendMessage(message, message.getAllRecipients());
-//	    transport.close();
-//		} catch (MessagingException e) {
-//			throw new CoreException("Error at sending email message");
-//		}
  }
  
+ 
+// public static void sendEmailTest(List<String> toEmailsList, String senderEmail, String senderMessage) {
+//	 
+//
+//     Properties props = new Properties();
+////here you set the host information (information about who is sending the email)
+////in this case, who is sending the email is a gmail client...
+//     props.put("mail.smtp.host", "smtp.gmail.com");
+//     props.put("mail.smtp.socketFactory.port", "465");
+//     props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+//     props.put("mail.smtp.auth", "true");
+//     props.put("mail.smtp.port", "465");
+//
+//     Session ses2 = Session.getDefaultInstance(props,
+//             new javax.mail.Authenticator() {
+//                 protected PasswordAuthentication        getPasswordAuthentication() {
+//                     return new PasswordAuthentication(Constants.EMAIL_ACCOUNT,Constants.EMAIL_PASSWORD);
+//                 }
+//             });
+//
+//     try {
+//
+//
+//         Message msg = new MimeMessage(ses2); 
+//
+//         msg.setFrom(new InternetAddress(senderEmail));
+//         msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmailsList.get(0)));
+//         msg.setSentDate(new Date());  
+//         msg.setSubject("Subject");  
+//         msg.setText(senderMessage);
+//
+//      // sending message (trying)  
+//         Transport.send(msg);  
+//
+//     } catch (AddressException e) {
+//         e.printStackTrace();
+//     } catch (MessagingException e) {
+//         e.printStackTrace();
+//     } 
+// }
+ 
   public static class MyAuthenticator extends Authenticator{
-	  protected  PasswordAuthentication 	getPasswordAuthentication(){
-		  return new PasswordAuthentication("tanovait", Constants.EMAIL_PASSWORD);
+	  protected  PasswordAuthentication getPasswordAuthentication(){
+		  return new PasswordAuthentication(Constants.EMAIL_FROM, Constants.EMAIL_PASSWORD);
 	  }
 	  
-	  
   }
-  
+  /**
+   *  Test sending of mails only
+   * @param args
+   */
   public static void main(String[] args){
 	  List<String> to = new LinkedList();
 	  to.add("tanovait@gmail.com");

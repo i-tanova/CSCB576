@@ -1,4 +1,5 @@
-grant codeBase "file:/home/fallenstar/Develop/NBU/CSCB576/AskServer2/bin/*" {
+grant codeBase "file:/home/ivana/Develop/NBU/CSCB576/AskServer2/bin/*" {
     permission java.security.AllPermission;
+    permission java.net.SocketPermission "smtp.gmail.com", "connect, accept, resolve";  
     permission java.lang.RuntimePermission "setFactory";
 };
