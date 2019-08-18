@@ -2,6 +2,7 @@ package tanovai.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -55,8 +56,8 @@ public class AskServerMain implements IServerAdminRMI {
 				AskServerMain.class.getProtectionDomain()
 						.getCodeSource().getLocation().toString());
 
-		System.setProperty("java.security.policy",
-				System.getProperty("user.dir")+ "/Resources/server.policy");
+		String policy = System.getProperty("user.dir")+ "/Resources/server.policy";
+		System.setProperty("java.security.policy", policy);
 
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());

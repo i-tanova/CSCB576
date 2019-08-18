@@ -1,4 +1,5 @@
 package tanovai.server;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,41 +17,105 @@ public class EmailSender {
 	static MimeMessage generateMailMessage;
  
  public static void sendEmails(List<String> toEmailsList, String senderEmail, String senderMessage) throws CoreException, AddressException, MessagingException{
-	       // Step1
+	new SendEmailThread(toEmailsList, senderEmail, senderMessage).start();
+ }
+ 
+   public static class SendEmailThread extends Thread{
+	   private List<String> toEmailsListFinal = new ArrayList<String>();
+	   private String senderEmailFinal = "";
+	   private String senderMessageFinal = "";
+			   
+	   SendEmailThread(List<String> toEmailsList, String senderEmail, String senderMessage){
+		   this.toEmailsListFinal = toEmailsList;
+		   this.senderEmailFinal = senderEmail;
+		   this.senderMessageFinal = senderMessage;
+	   }
+	   public void run() {
+		    String d_port = "587";
+		    String d_host = "smtp.gmail.com";
+		    String d_user = Constants.EMAIL_ACCOUNT;
+			// Step1
 			System.out.println("\n 1st ===> setup Mail Server Properties..");
 			mailServerProperties = System.getProperties();
-			mailServerProperties.put("mail.smtp.port", "587");
+			mailServerProperties.put("mail.smtp.port", d_port);
+			mailServerProperties.put("mail.smtp.host", d_host);
+			mailServerProperties.put("mail.smtp.user", d_user);
+			
 			mailServerProperties.put("mail.smtp.auth", "true");
 			mailServerProperties.put("mail.smtp.starttls.enable", "true");
+			
+			
+//			//Try
+//			mailServerProperties.put("mail.smtp.socketFactory.port", d_port);
+//			mailServerProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+//			mailServerProperties.put("mail.smtp.socketFactory.fallback", "false");
+//			
+//			//
+		
 			
 			System.out.println("Mail Server Properties have been setup successfully..");
 	 
 			// Step2
 			System.out.println("\n\n 2nd ===> get Mail Session..");
-			getMailSession = Session.getDefaultInstance(mailServerProperties, new MyAuthenticator());
+			
+			getMailSession = Session.getInstance(mailServerProperties,
+					new MyAuthenticator());
+	
 			getMailSession.setDebug(true);
+			
 			generateMailMessage = new MimeMessage(getMailSession);
-			String[] to = toEmailsList.toArray(new String[]{}); 
+			String[] to = toEmailsListFinal.toArray(new String[]{}); 
 			
 			for(String toString : to){
-				generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(toString));
+				try {
+					generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(toString));
+				} catch (AddressException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		    
-			generateMailMessage.setFrom(new InternetAddress(Constants.EMAIL_ACCOUNT));
-			generateMailMessage.setSubject("Ask server request");
-			generateMailMessage.setContent(senderMessage, "text/html");
+			try {
+				generateMailMessage.setFrom(new InternetAddress(Constants.EMAIL_ACCOUNT));
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				generateMailMessage.setSubject("Ask server request");
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				generateMailMessage.setContent(senderMessageFinal, "text/html");
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("Mail Session has been created successfully..");
 	 
 			// Step3
 			System.out.println("\n\n 3rd ===> Get Session and Send mail");
-			Transport transport = getMailSession.getTransport("smtp");
+			//Transport transport = getMailSession.getTransport("smtp");
 	 
 			// Enter your correct gmail UserID and Password
 			// if you have 2FA enabled then provide App Specific Password
-			transport.connect(Constants.EMAIL_HOST, Constants.EMAIL_ACCOUNT, Constants.EMAIL_PASSWORD);
-			transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
-			transport.close();
- }
+			//transport.connect(Constants.EMAIL_HOST, Constants.EMAIL_ACCOUNT, Constants.EMAIL_PASSWORD);
+			//transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+			//transport.close();
+			
+			try {
+				Transport.send(generateMailMessage);
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	   }
+   }
  
  
 // public static void sendEmailTest(List<String> toEmailsList, String senderEmail, String senderMessage) {

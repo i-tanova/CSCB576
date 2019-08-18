@@ -32,8 +32,7 @@ public class UIClient {
 	private static JTextField emailTxt;
 	private static JTextPane questionPane;
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) {		
 		JFrame f = new JFrame("JDesktopPane Sample");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container content = f.getContentPane();
@@ -60,6 +59,16 @@ public class UIClient {
 		f.setSize(500, 500);
 		f.setVisible(true);
 	}
+	
+//	public static void grantPolicy(){
+//		System.setProperty("java.security.policy",
+//				System.getProperty("user.dir")+ "/Resources/server.policy");
+//
+//		if (System.getSecurityManager() == null) {
+//			System.setSecurityManager(new SecurityManager());
+//		}
+//	}
+
 	
 	private static void makeRequest(String theme, String email, String question){
 		Client client = new Client();

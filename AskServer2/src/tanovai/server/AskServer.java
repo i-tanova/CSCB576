@@ -9,10 +9,13 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,8 +44,9 @@ public class AskServer implements Runnable {
 
 	@Override
 	public void run() {
-
 		System.out.println("Server Started.");
+		
+		sendMail();
 
 		synchronized (this) {
 			this.runningThread = Thread.currentThread();
@@ -70,6 +74,23 @@ public class AskServer implements Runnable {
 		}
 
 		System.out.println("Server Stopped.");
+	}
+
+	private void sendMail() {
+		ArrayList<String> list = new ArrayList();
+		list.add("tanovait@gmail.com");
+		try {
+			EmailSender.sendEmails(list, "tanovait@gmail.com", "Q");
+		} catch (AddressException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (CoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (MessagingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public synchronized boolean isStopped() {
